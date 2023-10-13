@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Acceso de Proveedor</title>
+    <!-- Bootstrap -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/yeti/bootstrap.min.css"
+         integrity="sha384-mLBxp+1RMvmQmXOjBzRjqqr0dP9VHU2tb3FK6VB0fJN/AOu7/y+CAeYeWJZ4b3ii" crossorigin="anonymous">
+    <!-- Fuente de google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alkatra&display=swap" rel="stylesheet">
+        <!-- mi main-->
+    <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+    <!-- Font awesome-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css"
+          integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous">
+    <script>
+        function mostrar(id)
+        {
+            var objeto=document.getElementById(id)
+            if(objeto.style.display=="block")
+                objeto.style.display="none";
+            else
+                objeto.style.display="block";
+        }
+    </script>
+    <style>
+        .oculto {display:none;}
+    </style>
+</head>
+<body>
+    <main class="container p-1">
+        <h1 class="display-1 text-center mt-4 titulo">Vista de productos para el {{current_user.name}}</h1>
+        <div class="row" >
+            <div class="col-md-6 offset-md-3 my-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <form action="/abastecer-producto" method="post">
+                            <div class="form-group">
+                                <input type="text"  name="contenido_empresa" placeholder="Nombre de tu empresa proveedora" class="form-control"
+                                       autofocus>
+                                <input type="text"  name="contenido_nombre" placeholder="Nombre del producto que desea abastecer" class="form-control"
+                                       autofocus>
+                                <input type="text"  name="contenido_stock" placeholder="Cantidad que desea abastecer" class="form-control"
+                                       autofocus>
+                                <input type="text"  name="contenido_precio" placeholder="Precio por pieza" class="form-control"
+                                       autofocus>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">
+                                Agregar producto
+                            </button>
+                        </form>
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-primary alert-dismissible" role="alert">
+                            <strong>{{ message}}</strong>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                        <br>
+                        <a class="btn btn-primary btn-block" href="{{ url_for('logout') }}">Logout</a>
+                        {% if current_user.is_admin %}
+                        <a class="btn btn-primary btn-block" href="/acceso_admin">Regresar al sitio de administrador
+                        </a>
+                        {% endif %}
+
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                        {% for producto in todos_los_productos %}
+                            <li class="list-group-item">
+                            <span>{{producto.nombre}} con {{producto.stock}} de {{producto.stock_maximo}} en almacen</span>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                    {% for abastecer in todos_abastecidos %}
+                    <button class="btn btn-primary btn-block" onclick="location.href='/abastecer_datos/{{abastecer.name_empresa}}'">
+                        Enviar todos los productos por abastecer de {{abastecer.name_empresa}}</button>
+                    {% endfor %}
+                    </div>
+                    <br>
+                    <form>
+                        <input type="button" class="btn btn-primary btn-block" onclick="mostrar('contenido1')" value="Mostrar/ocultar Grafica Ventas">
+                        <img src="data:image/png;base64,{{imagen.imagen}}" class="oculto" id="contenido1">
+                    </form>
+                </div>
+            </div>
+
+    </main>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Acceso de Administrador</title>
+    <!-- Bootstrap -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/yeti/bootstrap.min.css"
+         integrity="sha384-mLBxp+1RMvmQmXOjBzRjqqr0dP9VHU2tb3FK6VB0fJN/AOu7/y+CAeYeWJZ4b3ii" crossorigin="anonymous">
+    <!-- Fuente de google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alkatra&display=swap" rel="stylesheet">
+        <!-- mi main-->
+    <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+    <!-- Font awesome-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css"
+          integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous">
+    <script>
+        function mostrar(id)
+        {
+            var objeto=document.getElementById(id)
+            if(objeto.style.display=="block")
+                objeto.style.display="none";
+            else
+                objeto.style.display="block";
+        }
+    </script>
+    <style>
+        .oculto {display:none;}
+    </style>
+</head>
+<body>
+    <main class="container p-1">
+        <h1 class="display-1 text-center mt-4 titulo">Vista de productos para el {{current_user.name}}</h1>
+        <div class="row" >
+            <div class="col-md-6 offset-md-3 my-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <form action="/crear-producto" method="post">
+                            <div class="form-group">
+                                <input type="text"  name="contenido_nombre" placeholder="Nombre del nuevo producto" class="form-control"
+                                       autofocus>
+                                <input type="text"  name="contenido_precio" placeholder="Precio del nuevo producto" class="form-control"
+                                       autofocus>
+                                <input type="text"  name="contenido_stock" placeholder="Stock real del nuevo producto" class="form-control"
+                                       autofocus>
+                                <input type="text"  name="contenido_stock_maximo" placeholder="Maximo stock posible del nuevo producto" class="form-control"
+                                       autofocus>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">
+                                Subir producto
+                            </button>
+                        </form>
+                        <br>
+                        <a class="btn btn-primary btn-block" href="{{ url_for('logout') }}">Logout</a>
+                        <a class="btn btn-primary btn-block" href="/home_proveedor"> Acceso como proveedor</a>
+                        <a class="btn btn-primary btn-block" href="/home_cliente">Acceso como cliente</a>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                        {% for producto in todos_los_productos %}
+                            <li class="list-group-item">
+                            <span>{{producto.nombre}} en venta a {{producto.precio}} con {{producto.stock}} de
+                                {{producto.stock_maximo}} disponibles</span>
+                                <span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbspPor vender:{{producto.ventas}}</span>
+                                <a href="/venta-hecha/{{producto.id}}" style="text-decoration:none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1.9em" height="1.9em" fill="currentColor" class="bi bi-cart-check" viewBox="0 0 16 16">
+                                        <path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+                                        <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                    </svg>
+                                </a>
+                                <a href="/eliminar-producto/{{producto.id}}" style="text-decoration:none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1.9em" height="1.9em"
+fill="red" class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1
+.5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0
+0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0
+1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0
+0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-
+1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                    </svg>
+                                </a>
+                            </li>
+                        {% endfor %}
+                            </ul>
+                    </div>
+                             <ul class="list-group">
+                                 <li class="list-group-item">
+                            {% for contacto in todos_contactos%}
+                     <input type="button" class="btn btn-primary btn-block" onclick="mostrar('contenido{{contacto.name_empresa}}')" value="mostrar contacto de {{contacto.name_empresa}}">
+                        <a href="/eliminar-contacto/{{contacto.name_empresa}}" style="text-decoration:none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1.9em" height="1.9em"
+fill="red" class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1
+.5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0
+0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0
+1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0
+0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-
+1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                    </svg>
+                                </a>
+                        {% for abastecer in todos_abastecidos %}
+                    <span class="oculto" id="contenido{{contacto.name_empresa}}">{{contacto.name_empresa}} en {{contacto.direccion}}<br>
+                            ¿factura?:{{contacto.facturacion}}<br> telefono:{{contacto.telefono}}<br> descuento de:
+                            {{contacto.porcentaje_descuento}}<br>Productos ofrecidos:<br>{{abastecer.nombre}} con precio de
+                            {{abastecer.precio}} total a vender {{abastecer.stock}}<br>
+                        </span>
+                    {% endfor %}
+                    {% endfor %}
+                                 </li>
+                        </ul>
+                    </div>
+                    <br>
+                    <br>
+                    <form>
+                        <input type="button" class="btn btn-primary btn-block" onclick="mostrar('contenido1')" value="Mostrar/ocultar Grafica comparativa">
+                        <img src="data:image/png;base64,{{imagen.imagen}}" class="oculto" id="contenido1">
+                    </form>
+                </div>
+            </div>
+
+    </main>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Acceso de Datos</title>
+    <!-- Bootstrap -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/yeti/bootstrap.min.css"
+         integrity="sha384-mLBxp+1RMvmQmXOjBzRjqqr0dP9VHU2tb3FK6VB0fJN/AOu7/y+CAeYeWJZ4b3ii" crossorigin="anonymous">
+    <!-- Fuente de google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alkatra&display=swap" rel="stylesheet">
+        <!-- mi main-->
+    <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+    <!-- Font awesome-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css"
+          integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous">
+    <script>
+        function mostrar(id)
+        {
+            var objeto=document.getElementById(id)
+            if(objeto.style.display=="block")
+                objeto.style.display="none";
+            else
+                objeto.style.display="block";
+        }
+    </script>
+    <style>
+        .oculto {display:none;}
+    </style>
+</head>
+<body>
+    <main class="container p-1">
+        <h1 class="display-1 text-center mt-4 titulo">Vista de productos para el {{current_user.name}}</h1>
+        <div class="row" >
+            <div class="col-md-6 offset-md-3 my-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <form action="/contacto/{{empresa}}" method="post">
+                            <div class="form-group">
+                                <input type="text"  name="contenido_direccion" placeholder="Dirección de tu empresa" class="form-control"
+                                       autofocus>
+                                <input type="text"  name="contenido_telefono" placeholder="Telefono de contacto" class="form-control"
+                                       autofocus>
+                                <input type="text"  name="contenido_factura" placeholder="¿Facturas?: si o no" class="form-control"
+                                       autofocus>
+                                <input type="text"  name="contenido_descuento" placeholder="tipo de descuento disponible" class="form-control"
+                                       autofocus>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">
+                                Guardar datos
+                            </button>
+                        </form>
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-primary alert-dismissible" role="alert">
+                            <strong>{{ message}}</strong>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                        <br>
+                        <a class="btn btn-primary btn-block" href="{{ url_for('logout') }}">Logout</a>
+                        {% if current_user.is_admin %}
+                        <a class="btn btn-primary btn-block" href="/acceso_admin">Regresar al sitio de administrador
+                        </a>
+                        {% endif %}
+
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                        {% for abastecer in todos_abastecidos %}
+                            {% if empresa == abastecer.name_empresa %}
+                            <li class="list-group-item">
+                            <span>{{abastecer.nombre}} con precio de {{abastecer.precio}} total a vender {{abastecer.stock}} </span>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="location.href='/envio_datos'">Enviar datos de contacto</button>
+                    </div>
+                </div>
+            </div>
+
+    </main>
+</body>
+</html>
